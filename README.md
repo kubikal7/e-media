@@ -1,19 +1,18 @@
-# E-Media
+# PNG encryption
 
-Repozytorium zawierające dwa projekty z kursu **E-Media** dotyczące analizy i przetwarzania plików PNG.
+## Projects
 
-## Projekty
+### 1️. PNG Analysis and Anonymization
+The project in folder `1` consisted of:
+- analyzing the structure of the PNG file,
+- displaying the Fourier transform,
+- anonymizing the file.
+- main file: main1
 
-### 1️. Analiza i anonimizacja PNG
-Projekt w folderze `1` – polegał na:
-- analizie struktury pliku PNG,
-- wyświetleniu transformaty Fouriera,
-- zanonimizowaniu pliku.
+### 2. Encrypting and Decrypting PNG
+The project in folder `2` consisted of:
+- encrypting the data in the PNG file (chunk `IDAT`),
+- decrypting the file and restoring the original content.
 
-### 2. Szyfrowanie i odszyfrowywanie PNG
-Projekt w folderze `2` – polegał na:
-- zaszyfrowaniu danych w pliku PNG (chunk `IDAT`),  
-- odszyfrowaniu pliku i przywróceniu oryginalnej zawartości.
-
-## Technologie
+## Technologies
 - Python
