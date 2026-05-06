@@ -25,18 +25,18 @@ if __name__ == "__main__":
     
     '''
     '''
-    # Tworzymy klucz
+    # creating key
     key = RSA.construct((n, e))
 
-    # Szyfrowanie "raw" przez bibliotekę (bez ręcznego pow())
+    # Raw encryption via library (no manual pow())
     ciphertext = key._encrypt(int.from_bytes(b"1234567890123456", 'big'))
     cipher_bytes = ciphertext.to_bytes((key.size_in_bits() + 7) // 8, 'big')
 
-    print("Długość zaszyfrowanych danych (bajty):", len(cipher_bytes))
+    print("Length of encrypted data (bytes):", len(cipher_bytes))
     decrypted_int = key._decrypt(ciphertext)
     decrypted_bytes = decrypted_int.to_bytes((key.size_in_bits() + 7) // 8, 'big')
-    print(f"Odszyfrowane dane: {decrypted_bytes.decode()}")
-    print(f"Długość odszyfrowanych danych: {len(decrypted_bytes)} bajtów")
+    print(f"Decrypted data: {decrypted_bytes.decode()}")
+    print(f"Length of encrypted data: {len(decrypted_bytes)} bajtów")
     '''
     file_path = 'plik11.png'
 
@@ -44,40 +44,40 @@ if __name__ == "__main__":
     start = time.time()
     encrypted_chunks, tail_encrypted = ECB.encrypt_IDAT_chunks_compressed(crit, e, n)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("zaszyfrowany_compressed_ECB.png", crit, anc, encrypted_chunks, tail_encrypted+tail)
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("encrypted_compressed_ECB.png", crit, anc, encrypted_chunks, tail_encrypted+tail)
 
-    crit, anc, tail = PNG.readPNG("zaszyfrowany_compressed_ECB.png")
+    crit, anc, tail = PNG.readPNG("encrypted_compressed_ECB.png")
     decrypted_chunks = ECB.decrypt_IDAT_chunks_compressed(crit, tail, d, n)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("odszyfrowany_compressed_ECB.png", crit, anc, decrypted_chunks, b'')
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("decrypted_compressed_ECB.png", crit, anc, decrypted_chunks, b'')
     
     crit, anc, tail = PNG.readPNG(file_path)
     start = time.time()
     encrypted_chunks, tail_encrypted = ECB.encrypt_IDAT_chunks_after_decompressed(crit, e, n)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("zaszyfrowany_decompressed_ECB.png", crit, anc, encrypted_chunks, tail_encrypted+tail)
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("encrypted_decompressed_ECB.png", crit, anc, encrypted_chunks, tail_encrypted+tail)
 
-    crit_chunks, anc_chunks, tail = PNG.readPNG("zaszyfrowany_decompressed_ECB.png")
+    crit_chunks, anc_chunks, tail = PNG.readPNG("encrypted_decompressed_ECB.png")
     start = time.time()
     decrypted_idat_chunks = ECB.decrypt_IDAT_chunks_after_decompressed(crit_chunks, tail, d, n)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("odszyfrowany_decompressed_ECB.png", crit_chunks, anc_chunks, decrypted_idat_chunks, b'')
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("decrypted_decompressed_ECB.png", crit_chunks, anc_chunks, decrypted_idat_chunks, b'')
     
     crit, anc, tail = PNG.readPNG(file_path)
     start = time.time()
     encrypted_idat_chunks, tail_encrypted = CBC.encrypt_IDAT_chunks_after_decompressed(crit, e, n, 1)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("zaszyfrowany_decompressed_CBC.png", crit, anc, encrypted_idat_chunks, tail_encrypted+tail)
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("encrypted_decompressed_CBC.png", crit, anc, encrypted_idat_chunks, tail_encrypted+tail)
 
-    crit, anc, tail = PNG.readPNG("zaszyfrowany_decompressed_CBC.png")
+    crit, anc, tail = PNG.readPNG("encrypted_decompressed_CBC.png")
     start = time.time()
     encrypted_idat_chunks = CBC.decrypt_IDAT_chunks_after_decompressed(crit, tail, d, n)
     end = time.time()
-    print(f"Czas wykonania: {end-start:.4f} sekundy")
-    PNG.write_modified_png("odszyfrowany_decompressed_CBC.png", crit, anc, encrypted_idat_chunks, b'')
+    print(f"Execution time: {end-start:.4f} seconds")
+    PNG.write_modified_png("decrypted_decompressed_CBC.png", crit, anc, encrypted_idat_chunks, b'')
     

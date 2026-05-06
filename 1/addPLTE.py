@@ -27,14 +27,14 @@ def insert_plte_chunk(png_path, out_path='output_with_plte.png'):
     new_chunks = []
     plte_inserted = False
 
-    # Przygotuj losowe dane PLTE - np. 3 kolory RGB
-    # Każdy kolor to 3 bajty (R, G, B)
-    plte_data = os.urandom(9)  # 3 kolory * 3 bajty
+    # Prepare random PLTE data - e.g. 3 RGB colors
+    # Each color is 3 bytes (R, G, B)
+    plte_data = os.urandom(9)  # 3 colors * 3 bytes
 
     for t, d, length, crc in chunks:
         new_chunks.append((t, d, length, crc))
         if t == b'IHDR' and not plte_inserted:
-            # Po IHDR dodajemy PLTE
+            # After IHDR we add PLTE
             length_plte = len(plte_data)
             crc_plte = zlib.crc32(plte_data, zlib.crc32(b'PLTE'))
             crc_plte_bytes = struct.pack('>I', crc_plte)

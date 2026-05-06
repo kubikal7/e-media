@@ -1,40 +1,40 @@
 import zlib
 import struct
 
-#1 stale specyficzne dla formatu PNG
-PngSignature: bytes = b'\x89PNG\r\n\x1a\n'   #8 bajtowy nagłówek PNG
-critical = {b'IHDR', b'PLTE', b'IDAT', b'IEND'}   #4 krytyczne chunki wg RFC 2083
+#constants specific to the PNG format
+PngSignature: bytes = b'\x89PNG\r\n\x1a\n'   #8-byte PNG header
+critical = {b'IHDR', b'PLTE', b'IDAT', b'IEND'}   #4 critical chunks according to RFC 2083
 
-#2 parser pliku PNG recznie czyta strukturę PNG i zwraca rozbite chunki + bajty po IEND
+#the PNG file parser manually reads the PNG structure and returns the broken chunks + bytes after IEND
 def readPNG(file_path):
 
     critical_chunks  = []
     ancillary_chunks = []
 
     with open(file_path, 'rb') as f:
-        #walidacja
+        #validation
         if f.read(len(PngSignature)) != PngSignature:
             raise Exception('Invalid PNG Signature')
 
-        #odczyt jednego chunka
+        #reading one chunk
         def read_chunk(stream):
             #chunk = [4B length][4B type][payload][4B CRC]
             chunk_length, chunk_type = struct.unpack('>I4s', stream.read(8))
             chunk_data = stream.read(chunk_length)
             chunk_crc, = struct.unpack('>I', stream.read(4))
 
-            # CRC zabezpieczenie integralności, obliczamy zlib.crc32(type + data) i porównujemy
+            # CRC integrity protection, we calculate zlib.crc32(type + data) and compare
             calc_crc = zlib.crc32(chunk_data, zlib.crc32(chunk_type))
             if chunk_crc != calc_crc:
                 raise Exception('chunk checksum failed')
             return chunk_type, chunk_data, chunk_length, chunk_crc
 
-        #petla po chnkach
+        #loops in chunks
         offset = len(PngSignature)
         while True:
             t, d, length, crc = read_chunk(f)
 
-            #podział na critical i ancillary ułatwia późniejszą anonimizacje
+            #the division into critical and ancillary facilitates subsequent anonymization
             if t in critical:
                 critical_chunks.append((t, d, length, offset, crc))
             else:
@@ -42,7 +42,7 @@ def readPNG(file_path):
 
             offset += 4 + 4 + length + 4
             if t == b'IEND':
-                break  #koniec specyfikacji PNG dalej tyklko ukryte bajty
+                break  #end of PNG specification, only hidden bytes left
 
         f.seek(offset)
         tail_bytes = f.read()

@@ -9,11 +9,15 @@ The project in folder `1` consisted of:
 - anonymizing the file.
 - main file: main1.py
 
+![Anonymization](images/anonymization.png)
+
 ### 2. Encrypting and Decrypting PNG
 The project in folder `2` consisted of:
 - encrypting the data in the PNG file (chunk `IDAT`),
 - decrypting the file and restoring the original content.
 - main file: main.py
+
+![Encryption](images/encryption.png)
 
 ## Technologies
 - Python
